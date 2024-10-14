@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AppSample</string>
+    <string name="welcome_to_the_app">Welcome to the App!</string>
+    <string name="welcome">Welcome!</string>
+    <string name="home">Home</string>
+    <string name="on_duty">On-duty</string>
+    <string name="add">add</string>
+    <string name="not_yet_registered_login">Not yet registered? login</string>
+</resources>
