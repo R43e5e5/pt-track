@@ -2,14 +2,10 @@ package com.example.appsample
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-
 import com.example.appsample.databinding.ActivityLoginBinding
-
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,34 +20,40 @@ class LoginActivity : AppCompatActivity() {
         databaseHelper = DatabaseHelper(this)
 
         binding.loginButton.setOnClickListener {
+            val loginUsername = binding.loginUsername.text.toString().trim()
+            val loginPassword = binding.loginPassword.text.toString().trim()
 
-            val loginUsername = binding.loginUsername.text.toString()
-
-            val loginPassword = binding.loginPassword.text.toString()
+            // Check if fields are not empty
+            if (loginUsername.isEmpty() || loginPassword.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             loginDatabase(loginUsername, loginPassword)
-
         }
+
         binding.signupRedirect.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
             finish()
-
         }
     }
 
-    private fun loginDatabase(username: String, password: String){
-        val userExists = databaseHelper.readUser(username, password)
+    private fun loginDatabase(username: String, password: String) {
+        try {
+            val userExists = databaseHelper.readUser(username, password)
 
-        if (userExists){
-            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
-        } else {
-            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+            if (userExists) {
+                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e("LoginActivity", "Error logging in", e)
+            Toast.makeText(this, "An error occurred. Please try again.", Toast.LENGTH_SHORT).show()
         }
-
     }
 }
